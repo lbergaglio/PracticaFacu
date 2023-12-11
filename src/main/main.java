@@ -4,12 +4,72 @@ public class main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] vector= {1,1,0,0,1,0,1,0,1};
-		//System.out.print(ElementoEnPosicion(vector,0,vector.length));
-		//mergeSort(vector,0,vector.length);
-		//DevolverUnos(vector,vector.length-1);
-		System.out.print(DevolverUnos(vector,vector.length-1));
+		int[] pesos = {10,15,9,12,13};
+		int[] valor = {20,27,19,22,25};
+		double[] mochila = new double[pesos.length];
+		mochila = devolverMochila(pesos,valor,36);
+		for(int i=0; i < mochila.length; i++) {
+			System.out.println(mochila[i]);
+		}
+		
 	}
+	
+	//EJERCICIO 1 GREEDY
+	private static int[] devolverCambio(int[] billetes, int monto) {
+		int[] cambio = new int[billetes.length];
+		int i = 0, cant_billetes=0;
+		while (monto>0) {
+			if(monto/billetes[i]>=1) {
+				cant_billetes=monto/billetes[i];
+				monto-=cant_billetes*billetes[i];
+				cambio[i]=cant_billetes;
+			}
+			cant_billetes=0;
+			i++;
+		}
+		return cambio;
+	}
+	
+	//EJERCICIO 2 GREEDY
+	private static double[] devolverMochila(int[] peso, int[] valor, double pesoMax) {
+		double[] mochila = new double[peso.length];
+		double[] objetosPromedio = new double[peso.length];
+		for(int i=0;i<peso.length;i++) objetosPromedio[i]=valor[i]/peso[i];
+		//OrdenarVectorDouble(objetosPromedio,0,objetosPromedio.length-1);
+		int i, j;
+		int aux2;
+		double aux;
+        for (i = 0; i < objetosPromedio.length - 1; i++) {
+            for (j = 0; j < objetosPromedio.length - i - 1; j++) {                                                              
+                if (objetosPromedio[j + 1] < objetosPromedio[j]) {
+                    aux = objetosPromedio[j + 1];
+                    aux2 = peso[j+1];
+                    objetosPromedio[j + 1] = objetosPromedio[j];
+                    peso[j+1]=peso[j];
+                    objetosPromedio[j] = aux;
+                    peso[j]=aux2;
+                    aux2=valor[j+1];
+                    valor[j+1]=valor[j];
+                    valor[j]=aux2;
+                }
+            }
+        }
+        int k = 0;
+		while(pesoMax>0 && k<peso.length) {
+			if(pesoMax/peso[k]>=1) {
+				pesoMax-=peso[k];
+				mochila[k]=valor[k];	
+			}
+			else {
+				mochila[k]= pesoMax;
+				pesoMax=0;
+			}
+			//System.out.println(pesoMax);
+			k++;
+		}
+		return mochila;
+	}
+	
 	
 	//EJERCICIO 9 DIVIDE Y CONQUISTA
 	private static int DevolverUnos(int[] vector, int inicio) {
@@ -81,6 +141,24 @@ public class main {
 		}
 	}
 	
-	
+	private static void OrdenarVectorDouble(double[] A, int izq, int der) {
+		double pivote=A[izq]; 
+		  int i=izq;        
+		  int j=der;         
+		  double aux;
+		  while(i < j){                                                            
+		     while(A[i] <= pivote && i < j) i++; 
+		     while(A[j] > pivote) j--;           
+		     if (i < j) {                                             
+		         aux= A[i];                      
+		         A[i]=A[j];
+		         A[j]=aux;
+		     }
+		   }
+		   A[izq]=A[j];                                        
+		   A[j]=pivote;      
+		   if(izq < j-1) OrdenarVectorDouble(A,izq,j-1);         
+		   else if(j+1 < der) OrdenarVectorDouble(A,j+1,der);
+	}
 
 }
