@@ -4,10 +4,10 @@ public class main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] pesos = {10,15,9,12,13};
-		int[] valor = {20,27,19,22,25};
+		int[] pesos = {18,15,10};
+		int[] valor = {25,24,15};
 		double[] mochila = new double[pesos.length];
-		mochila = devolverMochila(pesos,valor,36);
+		mochila = devolverMochila(pesos,valor,20);
 		for(int i=0; i < mochila.length; i++) {
 			System.out.println(mochila[i]);
 		}
@@ -34,7 +34,7 @@ public class main {
 	private static double[] devolverMochila(int[] peso, int[] valor, double pesoMax) {
 		double[] mochila = new double[peso.length];
 		double[] objetosPromedio = new double[peso.length];
-		for(int i=0;i<peso.length;i++) objetosPromedio[i]=valor[i]/peso[i];
+		for(int i=0;i<peso.length;i++) objetosPromedio[i]=valor[i]*peso[i];
 		//OrdenarVectorDouble(objetosPromedio,0,objetosPromedio.length-1);
 		int i, j;
 		int aux2;
