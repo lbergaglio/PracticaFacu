@@ -1,5 +1,13 @@
 package main;
 
+import api.GrafoTDA;
+import api.ColaPrioridadTDA;
+import api.ConjuntoTDA;
+
+import implementacion.Grafo;
+import implementacion.ColaPrioridad;
+import implementacion.Conjunto;
+
 public class main {
 
 	public static void main(String[] args) {
@@ -12,6 +20,58 @@ public class main {
 			System.out.println(mochila[i]);
 		}
 		
+	}
+	
+	//EJERCICIO 1 GRAFO
+	private static int GimnasioMasCercano(GrafoTDA G, int inicio, int fin) {
+		GrafoTDA R = new Grafo();
+		R.InicializarGrafo();
+		ConjuntoTDA visitados = new Conjunto(); 
+		ConjuntoTDA pendientes = G.Vertices();
+		ConjuntoTDA aux = G.Vertices();
+		ConjuntoTDA aux2 = new Conjunto();
+		int v,vf,ai,af;
+		while(!aux.ConjuntoVacio()) {
+			v = aux.Elegir();
+			R.AgregarVertice(v);
+			aux.Sacar(v);
+			aux2=aux;
+			ai=v;
+			while(!aux2.ConjuntoVacio()) {
+				af=aux2.Elegir();
+				aux2.Sacar(af);
+				if(G.ExisteArista(ai, af)) R.AgregarArista(ai, af, G.PesoArista(ai, af));
+			}
+		}
+		visitados.Agregar(inicio);
+		pendientes.Sacar(inicio);
+		while(!pendientes.ConjuntoVacio()) {
+			int actual,menor;
+			aux=pendientes;
+			menor=aux.Elegir();
+			aux.Sacar(menor);
+			while(!aux2.ConjuntoVacio()){
+				actual=aux.Elegir();
+				if(R.PesoArista(inicio, menor)>R.PesoArista(inicio, actual)) menor=actual;
+				aux2.Sacar(actual);
+			}
+			pendientes.Sacar(menor);
+			visitados.Agregar(menor);
+			aux2=pendientes;
+			while(!aux2.ConjuntoVacio()) {
+				vf=aux2.Elegir();
+				if(R.ExisteArista(inicio, vf)) ai=R.PesoArista(inicio, vf);
+				else ai=1000;
+				if(R.ExisteArista(inicio, menor) && R.ExisteArista(menor, vf)) af=R.PesoArista(inicio, menor) + R.PesoArista(menor, vf);
+				else af=1100;
+				if(ai>af) {
+					R.EliminarArista(inicio, vf);
+					R.AgregarArista(inicio, vf, af);
+				}
+				
+			}
+		}		
+		return R.PesoArista(inicio, fin);
 	}
 	
 	//EJERCICIO 1 GREEDY
