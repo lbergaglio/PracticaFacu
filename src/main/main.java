@@ -5,6 +5,7 @@ import api.ColaPrioridadTDA;
 import api.ConjuntoTDA;
 
 import implementacion.Grafo;
+import implementacion.Nodo;
 import implementacion.ColaPrioridad;
 import implementacion.Conjunto;
 
@@ -12,14 +13,79 @@ public class main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] pesos = {18,15,10};
+		/*int[] pesos = {18,15,10};
 		int[] valor = {25,24,15};
 		double[] mochila = new double[pesos.length];
 		mochila = devolverMochila(pesos,valor,20);
 		for(int i=0; i < mochila.length; i++) {
 			System.out.println(mochila[i]);
+		}*/
+		System.out.println(calculoInflacionPorDia(365,2));
+		
+	}
+	
+	private static double calculoInflacionPorDia(int diasRestantes, double indice) {
+		if(diasRestantes==1) return indice;
+		else return calculoInflacionPorDia(diasRestantes-1,indice) * (1 + indice/100) + indice;
+	}
+	
+	private static ConjuntoTDA CaminoCines(GrafoTDA grafo,int entrada,int salida) {
+		ConjuntoTDA pendientes = new Conjunto();
+		
+		int cant_vertices = sizeConjunto(pendientes);
+		
+		Boolean[][] matriz = new Boolean[cant_vertices][cant_vertices];  
+		
+		for(int i=1; i<=cant_vertices;i++) {
+			for(int j=1; j<=cant_vertices;j++) {
+				if(grafo.ExisteArista(i, j)) matriz[i-1][j-1]=true;
+				else matriz[i-1][j-1]=false;
+			}
 		}
 		
+		Nodo nodoRaiz = new Nodo();
+		nodoRaiz.setId(entrada);
+		pendientes.Sacar(nodoRaiz.getId());
+		
+		for(int i=0;i<cant_vertices;i++) {
+			if(matriz[nodoRaiz.getId()-1][i] && !pendientes.Pertenece(i+1)) nodoRaiz.setVecinos(i+1);
+		}
+		
+		ConjuntoTDA mejorSolucion = new Conjunto();
+		mejorSolucion.Agregar(nodoRaiz.getId());
+		ConjuntoTDA solucionParcial = mejorSolucion;
+		
+		while(!nodoRaiz.getVecinos().ConjuntoVacio()) {
+			Nodo nodo = new Nodo();
+			nodo.setId(nodoRaiz.getVecinos().Elegir());
+			solucionParcial.Agregar(nodo.getId());
+			pendientes.Sacar(nodo.getId());
+			if(nodo.getId()==salida && sizeConjunto(mejorSolucion)<sizeConjunto(solucionParcial)) mejorSolucion=solucionParcial;
+			else {
+				for(int i=0;i<cant_vertices;i++) {
+					if(matriz[nodo.getId()-1][i] && !pendientes.Pertenece(i+1)) nodo.setVecinos(i+1);
+				}
+				while(!nodo.getVecinos().ConjuntoVacio()) {
+						
+				}
+			
+				
+			}
+		}
+		
+		
+		return null;
+	}
+	
+	
+	private static int sizeConjunto(ConjuntoTDA conjunto) {
+		ConjuntoTDA aux = conjunto;
+		int i=0;
+		while(!aux.ConjuntoVacio()) {
+			i++;
+			aux.Sacar(aux.Elegir());
+		}
+		return i;
 	}
 	
 	//EJERCICIO 1 GRAFO
